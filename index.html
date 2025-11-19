@@ -1,135 +1,468 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solutions Punta Cana - Servicios Técnicos</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Solutions - Punta Cana (Mejorado)</title>
+
+  <!-- Tailwind CSS CDN (rápido para prototipo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Plataforma de servicios técnicos Punta Cana — demo estático mejorado">
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    header {
-      background: rgba(0,0,0,0.7);
-      padding: 15px;
-      text-align: center;
-    }
-
-    header h1 {
-      color: white;
-      cursor: pointer;
-      margin: 0;
-    }
-
-    .container {
-      background: rgba(255,255,255,0.9);
-      max-width: 900px;
-      margin: 20px auto; 
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .admin-only {
-      background: #fff3cd;
-      padding: 10px;
-      border-left: 4px solid #ffcc00;
-      margin-top: 15px;
-      display: none;
-    }
-
-    .hidden {
-      display: none;
-    }
+    /* Custom styling that complements Tailwind */
+    .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(6px); }
+    .card { border: 1px solid rgba(0,0,0,0.06); }
+    .hidden-el { display: none; }
+    /* Make modal scrollable on small screens */
+    .modal-content { max-height: 80vh; overflow:auto; }
+    /* header logo clickable pointer */
+    .logo-btn { cursor: pointer; }
   </style>
-
-  <script>
-    // 🔥 Simulación de SUPER USUARIO
-    // Cambia "false" a "true" cuando un admin inicia sesión
-    const isSuperAdmin = false;
-
-    window.onload = () => {
-      if (isSuperAdmin) {
-        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
-      }
-    };
-
-    function goHome() {
-      window.location.href = "index.html";
-    }
-  </script>
 </head>
+<body class="bg-gradient-to-b from-sky-50 to-white text-slate-800 min-h-screen"
+      style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=60'); background-size:cover; background-attachment: fixed;">
 
-<body>
-
-  <!-- 🔥 HEADER -->
-  <header>
-    <h1 onclick="goHome()">Solutions Punta Cana</h1>
-  </header>
-
-  <div class="container">
-
-    <h2>Registro de Técnico</h2>
-    <p>Complete el formulario para registrarse como técnico autorizado.</p>
-
-    <!-- FORMULARIO DEL TÉCNICO -->
-    <form>
-
-      <label>Nombre Completo</label>
-      <input type="text" required placeholder="Ej: Juan Pérez">
-
-      <label>Categoría del Técnico</label>
-      <select required>
-        <option value="">Seleccione...</option>
-        <option>Pintura</option>
-        <option>Mecánico</option>
-        <option>Plomero</option>
-        <option>Electricista</option>
-        <option>Refrigeración</option>
-        <option>Mantenimiento Aire Acondicionado</option>
-        <option>Cerrajero</option>
-        <option>Herrero</option>
-      </select>
-
-      <!-- 📸 FOTO CON CÁMARA O ARCHIVO -->
-      <label>Subir o tomar foto</label>
-      <input type="file" accept="image/*" capture="camera">
-
-      <label>Descripción del servicio</label>
-      <input type="text" placeholder="Ej: Técnicos con 10 años de experiencia...">
-
-      <!-- 🔐 SOLO ADMIN VE ESTO -->
-      <div class="admin-only">
-        <label>Número de referencia #1</label>
-        <input type="text" placeholder="Solo visible para administradores">
-
-        <label>Número de referencia #2</label>
-        <input type="text" placeholder="Solo visible para administradores">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 bg-white/70 glass shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <!-- Logo / Title (click -> go home) -->
+      <div class="flex items-center gap-3 logo-btn" id="logoBtn">
+        <div class="w-10 h-10 bg-sky-600 text-white flex items-center justify-center rounded-full font-bold">SC</div>
+        <div>
+          <h1 class="text-lg font-bold">Solutions Punta Cana</h1>
+          <p class="text-xs text-slate-500">Servicios técnicos on-demand</p>
+        </div>
       </div>
 
-      <!-- 💳 Método de pago (futuro) -->
-      <label>Método de pago (próximamente)</label>
-      <select disabled>
-        <option>Stripe (pendiente de activación)</option>
-        <option>Tarjeta de crédito (próximamente)</option>
-      </select>
+      <nav class="flex items-center gap-4">
+        <button id="btnShowTech" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Técnicos</button>
+        <button id="btnShowServices" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Servicios</button>
+        <button id="btnShowAdmin" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Modo Técnico</button>
+        <div id="authArea" class="ml-2"></div>
+      </nav>
+    </div>
+  </header>
 
-      <button type="submit" style="margin-top:15px; background:black; color:white;">Crear Cuenta de Técnico</button>
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- HERO -->
+    <section id="homeSection" class="grid md:grid-cols-2 gap-6 items-center">
+      <div>
+        <h2 class="text-3xl font-extrabold text-white drop-shadow-lg">Encuentra técnicos confiables en <span class="text-sky-200">Punta Cana</span></h2>
+        <p class="mt-3 text-sky-100/90">Plomeros, electricistas, refrigeración, cerrajeros, herreros, mecánicos y más. Reserva y paga desde la app.</p>
+        <div class="mt-6 flex gap-3">
+          <button id="btnExplore" class="px-4 py-2 bg-sky-600 text-white rounded-md shadow">Explorar técnicos</button>
+          <button id="btnRegisterUser" class="px-4 py-2 border border-white/40 text-white rounded-md">Crear cuenta</button>
+        </div>
+      </div>
+      <div class="bg-white/90 card p-6 rounded-lg shadow">
+        <h3 class="font-semibold">Categorías destacadas</h3>
+        <div class="grid grid-cols-3 gap-3 mt-4 text-sm text-slate-700">
+          <div class="p-3 rounded border text-center">Plomería</div>
+          <div class="p-3 rounded border text-center">Electricidad</div>
+          <div class="p-3 rounded border text-center">Refrigeración</div>
+          <div class="p-3 rounded border text-center">A/C</div>
+          <div class="p-3 rounded border text-center">Cerrajería</div>
+          <div class="p-3 rounded border text-center">Herrería</div>
+        </div>
+      </div>
+    </section>
 
-    </form>
+    <!-- SERVICES -->
+    <section id="servicesSection" class="hidden mt-8">
+      <h2 class="text-2xl font-bold">Servicios</h2>
+      <p class="text-slate-500 mt-2">Filtra por zona y categoría</p>
+      <div class="mt-4 flex gap-3">
+        <input id="serviceFilter" placeholder="Buscar servicio..." class="p-2 border rounded w-full" />
+        <select id="zoneFilter" class="p-2 border rounded">
+          <option value="">Todas las zonas</option>
+          <option>Punta Cana</option>
+          <option>Bávaro</option>
+          <option>Friusa</option>
+          <option>Verón</option>
+        </select>
+        <button id="btnFilter" class="px-3 py-2 bg-sky-600 text-white rounded">Filtrar</button>
+      </div>
+    </section>
 
+    <!-- TECHNICIANS -->
+    <section id="techSection" class="hidden mt-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">Técnicos disponibles</h2>
+        <div class="text-sm text-slate-500">Zona: <span id="currentZone">Todas</span></div>
+      </div>
+      <div id="techGrid" class="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2"></div>
+    </section>
+
+    <!-- ADMIN / MODO TECNICO -->
+    <section id="adminSection" class="hidden mt-8">
+      <h2 class="text-2xl font-bold">Modo Técnico (Crear perfil)</h2>
+      <p class="text-slate-500 mt-1">Regístrate o inicia sesión y crea tu perfil de técnico. Cada técnico debe incluir <strong>2 números de referencia</strong>.</p>
+
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        <!-- Auth / Register -->
+        <div class="bg-white p-4 rounded card">
+          <h3 class="font-semibold">Acceso / Registro de Usuario</h3>
+          <form id="authForm" class="mt-3 space-y-2">
+            <input id="authEmail" type="email" placeholder="Email" class="w-full p-2 border rounded" required />
+            <input id="authPassword" type="password" placeholder="Contraseña" class="w-full p-2 border rounded" required />
+            <select id="paymentMethod" class="w-full p-2 border rounded" title="Método de pago (guardado para activar)">
+              <option value="">Selecciona método de pago (futuro)</option>
+              <option value="card">Tarjeta (Stripe)</option>
+              <option value="paypal">PayPal</option>
+              <option value="cash">Efectivo (a convenir)</option>
+            </select>
+            <div class="flex gap-2">
+              <button type="button" id="btnLogin" class="px-3 py-2 bg-green-600 text-white rounded">Ingresar</button>
+              <button type="button" id="btnSignup" class="px-3 py-2 bg-sky-600 text-white rounded">Crear cuenta</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Nota: en esta demo, el "login" se guarda en localStorage. Para producción, conecta Firebase Auth.</p>
+            <p class="text-xs text-slate-400 mt-1">Super Admin demo: <strong>admin@solutions.com</strong> / <strong>admin123</strong></p>
+          </form>
+        </div>
+
+        <!-- Create technician -->
+        <div class="bg-white p-4 rounded card" id="techCreateCard">
+          <h3 class="font-semibold">Crear perfil técnico</h3>
+          <form id="createTechForm" class="mt-3 space-y-2">
+            <input id="techName" placeholder="Nombre completo" class="w-full border p-2 rounded" required />
+            <input id="techPhone" placeholder="Teléfono (WhatsApp)" class="w-full border p-2 rounded" required />
+            <input id="techZone" placeholder="Zona (ej. Punta Cana)" class="w-full border p-2 rounded" required />
+            <input id="techServices" placeholder="Servicios (coma separado: Plomería,Electricidad)" class="w-full border p-2 rounded" />
+            <!-- Photo upload / capture -->
+            <label class="text-xs text-slate-500">Subir o tomar foto (móvil: cámara)</label>
+            <input id="techPhoto" type="file" accept="image/*" capture="environment" class="w-full border p-2 rounded" />
+            <img id="techPhotoPreview" src="" alt="" class="w-32 h-32 object-cover rounded hidden border mt-2" />
+            <div class="grid grid-cols-2 gap-2">
+              <!-- References are input but only shown to admin in the UI; still collected -->
+              <input id="techRef1" placeholder="Referencia 1 (nombre-teléfono)" class="p-2 border rounded" required />
+              <input id="techRef2" placeholder="Referencia 2 (nombre-teléfono)" class="p-2 border rounded" required />
+            </div>
+            <div class="flex gap-2 mt-2">
+              <button class="px-3 py-2 bg-sky-600 text-white rounded">Crear técnico</button>
+              <button type="button" id="btnClearTech" class="px-3 py-2 border rounded">Limpiar</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Los técnicos se almacenan localmente. Para producción: Firestore/Backend y subida de imagen a Storage.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Perfil técnico -->
+  <div id="profileModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-2xl w-full p-6 card modal-content">
+      <div class="flex items-start justify-between">
+        <div>
+          <h3 id="profileName" class="text-xl font-bold"></h3>
+          <p id="profileZone" class="text-sm text-slate-500"></p>
+        </div>
+        <button id="closeProfile" class="text-slate-500">Cerrar ✕</button>
+      </div>
+      <div class="mt-4 md:flex gap-6">
+        <img id="profilePhoto" src="" alt="" class="w-36 h-36 rounded object-cover border" />
+        <div>
+          <p id="profileServices" class="text-slate-700"></p>
+          <p class="mt-2"><strong>Teléfono:</strong> <span id="profilePhone"></span></p>
+          <div id="refsBox" class="mt-2">
+            <p class="mt-2"><strong>Referencias:</strong></p>
+            <ul class="list-disc ml-5 text-slate-600">
+              <li id="profileRef1"></li>
+              <li id="profileRef2"></li>
+            </ul>
+          </div>
+
+          <div class="mt-4 flex gap-3">
+            <a id="waLink" class="px-3 py-2 border rounded text-sm" target="_blank" rel="noopener">Contactar (WhatsApp)</a>
+            <button id="payBtn" class="px-3 py-2 bg-green-600 text-white rounded text-sm">Pagar y reservar</button>
+          </div>
+
+          <p id="payNote" class="text-xs text-slate-500 mt-3">El botón de pago intenta llamar a <code>/create-checkout</code> (server-side). Reemplaza por tu función Stripe cuando esté lista.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- SCRIPTS -->
+  <script>
+    /*******************************
+     Demo JS mejorado: almacenamiento local + super admin
+     Reemplazar con Firebase + Stripe para producción
+    *******************************/
+
+    // ---------- Helpers & initial data ----------
+    const SAMPLE_TECHS = [
+      { id: 't001', name: 'Juan Reyes', phone: '+1 809-555-0101', zone: 'Punta Cana', services: ['Plomería','Mantenimiento A/C'], photo: '', ref1: 'Ana (809-111-2222)', ref2: 'Luis (809-333-4444)', rating: 4.8 },
+      { id: 't002', name: 'María López', phone: '+1 809-555-0202', zone: 'Bávaro', services: ['Electricidad'], photo: '', ref1: 'Carlos (809-555-5555)', ref2: 'Pedro (809-666-7777)', rating: 4.7 }
+    ];
+
+    function loadTechs(){
+      const raw = localStorage.getItem('techs');
+      if(!raw){ localStorage.setItem('techs', JSON.stringify(SAMPLE_TECHS)); return SAMPLE_TECHS; }
+      try { return JSON.parse(raw); } catch(e){ return SAMPLE_TECHS; }
+    }
+    function saveTechs(list){ localStorage.setItem('techs', JSON.stringify(list)); }
+
+    function currentUser(){ return JSON.parse(localStorage.getItem('user') || 'null'); }
+    function setUser(u){ localStorage.setItem('user', JSON.stringify(u)); updateAuthUI(); }
+
+    // Super admin default (demo only)
+    const SUPER_ADMIN = { email: 'admin@solutions.com', password: 'admin123', isAdmin: true };
+
+    // ---------- UI elements ----------
+    const homeSection = document.getElementById('homeSection');
+    const servicesSection = document.getElementById('servicesSection');
+    const techSection = document.getElementById('techSection');
+    const adminSection = document.getElementById('adminSection');
+    const authArea = document.getElementById('authArea');
+
+    const profileModal = document.getElementById('profileModal');
+    const profileName = document.getElementById('profileName');
+    const profileZone = document.getElementById('profileZone');
+    const profilePhoto = document.getElementById('profilePhoto');
+    const profileServices = document.getElementById('profileServices');
+    const profilePhone = document.getElementById('profilePhone');
+    const profileRef1 = document.getElementById('profileRef1');
+    const profileRef2 = document.getElementById('profileRef2');
+    const waLink = document.getElementById('waLink');
+    const payBtn = document.getElementById('payBtn');
+    const refsBox = document.getElementById('refsBox');
+
+    // Logo click -> go home but not reload
+    document.getElementById('logoBtn').addEventListener('click', (e)=>{ e.preventDefault(); showSection('home'); window.scrollTo({top:0, behavior:'smooth'}); });
+
+    // ---------- Render technicians ----------
+    function renderTechGrid(filterService='', zone=''){
+      const grid = document.getElementById('techGrid');
+      const list = loadTechs();
+      let filtered = list;
+      if(filterService) filtered = filtered.filter(t => t.services.join(' ').toLowerCase().includes(filterService.toLowerCase()));
+      if(zone) filtered = filtered.filter(t => t.zone === zone);
+      grid.innerHTML = '';
+      if(filtered.length===0) grid.innerHTML = '<div class="text-slate-500">No hay técnicos.</div>';
+      filtered.forEach(t=>{
+        const div = document.createElement('div');
+        div.className = 'bg-white p-4 rounded card flex gap-4 items-center';
+        const admin = currentUser()?.isAdmin;
+        div.innerHTML = `
+          <div class="w-20 h-20 bg-slate-100 rounded overflow-hidden flex items-center justify-center">
+            <img src="${t.photo || 'https://via.placeholder.com/120x120?text=User'}" alt="" class="object-cover w-full h-full"/>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold">${t.name}</h4>
+                <div class="text-sm text-slate-500">${t.zone} • ${t.rating || '—'} ⭐</div>
+              </div>
+              <div class="text-sm">
+                <button data-id="${t.id}" class="openProfile px-3 py-1 bg-sky-600 text-white rounded text-xs">Ver</button>
+              </div>
+            </div>
+            <p class="text-sm mt-2 text-slate-700">${t.services.join(', ')}</p>
+            ${admin ? `<p class="text-xs text-slate-500 mt-2">Ref: ${t.ref1 || '—'} • ${t.ref2 || '—'}</p>` : ''}
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+
+      // attach profile buttons
+      document.querySelectorAll('.openProfile').forEach(btn=>{
+        btn.onclick = (e)=>{
+          const id = e.currentTarget.dataset.id;
+          openProfile(id);
+        }
+      });
+    }
+
+    // ---------- Profile modal ----------
+    function openProfile(id){
+      const list = loadTechs();
+      const t = list.find(x=>x.id===id);
+      if(!t) return alert('Técnico no encontrado');
+      profileName.textContent = t.name;
+      profileZone.textContent = t.zone;
+      profilePhoto.src = t.photo || 'https://via.placeholder.com/320x320?text=User';
+      profileServices.textContent = 'Servicios: ' + (t.services?.join(', ') || '—');
+      profilePhone.textContent = t.phone;
+      profileRef1.textContent = t.ref1 || '—';
+      profileRef2.textContent = t.ref2 || '—';
+      waLink.href = `https://wa.me/${(t.phone||'').replace(/\D/g,'')}?text=${encodeURIComponent('Hola '+t.name+' - necesito tu servicio')}`;
+
+      // Show or hide references depending on current user's admin status
+      const isAdmin = currentUser()?.isAdmin;
+      refsBox.style.display = isAdmin ? 'block' : 'none';
+
+      // Payment button (calls server endpoint /create-checkout - replace with your server)
+      payBtn.onclick = async ()=>{
+        const amount = prompt('Ingrese monto a pagar (en USD) — ejemplo: 25.00', '25.00');
+        if(!amount) return;
+        try {
+          const resp = await fetch('/create-checkout', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ technicianId: t.id, amount: Math.round(parseFloat(amount) * 100) })
+          });
+          if(resp.ok){
+            const data = await resp.json();
+            if(data.url) window.location = data.url;
+            else alert('Respuesta inválida del servidor. Revisa tu función create-checkout.');
+          } else {
+            const txt = await resp.text();
+            alert('Error en servidor: ' + txt);
+          }
+        } catch(err){
+          alert('No se pudo conectar al servidor de pagos. En local demo no existe endpoint. Implementa server-side.');
+          console.error(err);
+        }
+      };
+
+      profileModal.classList.remove('hidden');
+      profileModal.classList.add('flex');
+    }
+
+    document.getElementById('closeProfile').onclick = ()=> {
+      profileModal.classList.add('hidden');
+      profileModal.classList.remove('flex');
+    };
+
+    // ---------- UI navigation ----------
+    function showSection(name){
+      homeSection.classList.toggle('hidden', name!=='home');
+      servicesSection.classList.toggle('hidden', name!=='services');
+      techSection.classList.toggle('hidden', name!=='tech');
+      adminSection.classList.toggle('hidden', name!=='admin');
+      if(name==='tech'){ renderTechGrid(); }
+    }
+
+    // ---------- Button bindings ----------
+    document.getElementById('btnShowTech').onclick = ()=> { showSection('tech'); window.scrollTo(0,0); }
+    document.getElementById('btnShowServices').onclick = ()=> { showSection('services'); window.scrollTo(0,0); }
+    document.getElementById('btnShowAdmin').onclick = ()=> { showSection('admin'); window.scrollTo(0,0); }
+    document.getElementById('btnExplore').onclick = ()=> { showSection('tech'); window.scrollTo(0,0); }
+    document.getElementById('btnRegisterUser').onclick = ()=> { showSection('admin'); window.scrollTo(0,0); }
+
+    document.getElementById('btnFilter').onclick = ()=> {
+      const f = document.getElementById('serviceFilter').value.trim();
+      const z = document.getElementById('zoneFilter').value;
+      document.getElementById('currentZone').textContent = z||'Todas';
+      renderTechGrid(f,z);
+      showSection('tech');
+    };
+
+    // ---------- Auth (local demo) ----------
+    function updateAuthUI(){
+      const u = currentUser();
+      if(u){
+        authArea.innerHTML = `
+          <div class="flex items-center gap-2">
+            <div class="text-sm text-slate-700">Hola, <strong>${u.email}</strong></div>
+            <button id="btnLogout" class="px-2 py-1 border rounded text-sm">Salir</button>
+          </div>`;
+        document.getElementById('btnLogout').onclick = ()=>{ localStorage.removeItem('user'); updateAuthUI(); renderTechGrid(); }
+      } else {
+        authArea.innerHTML = `<button id="btnOpenAuth" class="px-2 py-1 border rounded text-sm">Acceder</button>`;
+        document.getElementById('btnOpenAuth').onclick = ()=> { showSection('admin'); window.scrollTo(0,0); }
+      }
+    }
+
+    // Login & Signup (local demo)
+    document.getElementById('btnLogin').onclick = ()=> {
+      const email = document.getElementById('authEmail').value.trim();
+      const pwd = document.getElementById('authPassword').value.trim();
+      const payMethod = document.getElementById('paymentMethod').value;
+      if(!email || !pwd) return alert('Completa email y contraseña');
+
+      // Check super admin
+      if(email === SUPER_ADMIN.email && pwd === SUPER_ADMIN.password){
+        setUser({ email, isAdmin: true, paymentMethod });
+        alert('Ingresado como Super Admin');
+        renderTechGrid();
+        return;
+      }
+
+      // For demo: store user in localStorage (no password checking)
+      setUser({ email, isAdmin: false, paymentMethod });
+      alert('Ingresado como: ' + email);
+      renderTechGrid();
+    };
+
+    document.getElementById('btnSignup').onclick = ()=> {
+      const email = document.getElementById('authEmail').value.trim();
+      const pwd = document.getElementById('authPassword').value.trim();
+      const payMethod = document.getElementById('paymentMethod').value;
+      if(!email || !pwd) return alert('Completa email y contraseña');
+      // Demo: create user and login
+      setUser({ email, isAdmin: false, paymentMethod });
+      alert('Cuenta creada e ingresada: ' + email + '. Método de pago guardado (no activado).');
+      renderTechGrid();
+    };
+
+    // ---------- Create technician (with photo capture/upload) ----------
+    // Photo input & preview
+    const photoInput = document.getElementById('techPhoto');
+    const photoPreview = document.getElementById('techPhotoPreview');
+    let selectedPhotoDataURL = '';
+
+    photoInput.addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) { photoPreview.classList.add('hidden'); selectedPhotoDataURL=''; return; }
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        selectedPhotoDataURL = ev.target.result;
+        photoPreview.src = selectedPhotoDataURL;
+        photoPreview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(f);
+    });
+
+    document.getElementById('createTechForm').onsubmit = (e)=> {
+      e.preventDefault();
+      const user = currentUser();
+      if(!user) return alert('Debes ingresar/crear una cuenta antes de crear un técnico.');
+      const name = document.getElementById('techName').value.trim();
+      const phone = document.getElementById('techPhone').value.trim();
+      const zone = document.getElementById('techZone').value.trim();
+      const services = (document.getElementById('techServices').value || '').split(',').map(s=>s.trim()).filter(Boolean);
+      const photo = selectedPhotoDataURL || ''; // store dataURL (or empty)
+      const ref1 = document.getElementById('techRef1').value.trim();
+      const ref2 = document.getElementById('techRef2').value.trim();
+      if(!name || !phone || !zone || !ref1 || !ref2) return alert('Completa los campos obligatorios y las 2 referencias.');
+
+      const list = loadTechs();
+      const newTech = {
+        id: 't' + Date.now(),
+        name, phone, zone, services, photo, ref1, ref2, rating: 5
+      };
+      list.unshift(newTech);
+      saveTechs(list);
+      renderTechGrid();
+      alert('Técnico creado correctamente.');
+      document.getElementById('createTechForm').reset();
+      photoPreview.classList.add('hidden');
+      selectedPhotoDataURL = '';
+      showSection('tech');
+    };
+
+    document.getElementById('btnClearTech').onclick = ()=> {
+      document.getElementById('createTechForm').reset();
+      photoPreview.classList.add('hidden');
+      selectedPhotoDataURL = '';
+    };
+
+    // ---------- Initial render ----------
+    if(!localStorage.getItem('techs')) saveTechs(SAMPLE_TECHS);
+    updateAuthUI();
+    renderTechGrid();
+    showSection('home');
+
+    // Helpful note: To make this production-ready:
+    // 1) Reemplaza el auth local por Firebase Auth (email/password o Google).
+    //    - Detecta roles (isAdmin) desde Firestore o claims custom.
+    // 2) Guarda técnicos en Firestore (collection 'technicians') y images en Firebase Storage.
+    // 3) Implementa endpoint server-side /create-checkout que cree sesión Stripe Checkout o usa Stripe Connect para comisiones.
+    // 4) Ajusta moneda a DOP y cumple KYC si procesas pagos y transfieres a técnicos.
+
+  </script>
 </body>
 </html>
