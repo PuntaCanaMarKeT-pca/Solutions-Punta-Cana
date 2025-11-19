@@ -3,79 +3,400 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TechTasks Punta Cana</title>
-  <meta name="description" content="Plataforma de servicios técnicos on-demand en Punta Cana, Bávaro y zonas aledañas.">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script defer src="assets/js/main.js"></script>
+  <title>Solutions - Punta Cana (Demo)</title>
+  <!-- Tailwind CSS CDN (rápido para prototipo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Plataforma de servicios técnicos Punta Cana — demo estático">
+  <style>
+    /* Pequeñas personalizaciones */
+    .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(6px); }
+    .card { border: 1px solid rgba(0,0,0,0.06); }
+  </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html">TechTasks Punta Cana</a>
-      <nav class="nav">
-        <a href="services.html">Servicios</a>
-        <a href="technicians.html">Técnicos</a>
-        <a href="contact.html">Contacto</a>
+<body class="bg-gradient-to-b from-sky-50 to-white text-slate-800 min-h-screen">
+  <header class="sticky top-0 z-50 bg-white/80 glass shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a class="flex items-center gap-3" href="#">
+        <div class="w-10 h-10 bg-sky-600 text-white flex items-center justify-center rounded-full font-bold">SC</div>
+        <div>
+          <h1 class="text-lg font-bold">Solutions Punta Cana</h1>
+          <p class="text-xs text-slate-500">Servicios técnicos on-demand</p>
+        </div>
+      </a>
+
+      <nav class="flex items-center gap-3">
+        <button id="btnShowTech" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Técnicos</button>
+        <button id="btnShowServices" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Servicios</button>
+        <button id="btnShowAdmin" class="px-3 py-2 rounded text-sm hover:bg-slate-100">Modo Técnico</button>
+        <div id="authArea" class="ml-2"></div>
       </nav>
-      <button class="btn-cta" onclick="openWhatsApp()"><span>Pedidos</span></button>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <h1>Servicios técnicos rápidos y confiables en <strong>Punta Cana</strong></h1>
-          <p>Plomeros, electricistas, mecánicos, refrigeración, cerrajeros y más. Filtra por zona y contacta al técnico directamente por WhatsApp.</p>
-          <div class="search-row">
-            <input id="searchInput" placeholder="Buscar servicio o técnico (ej. plomero, aire acondicionado)"/>
-            <select id="zoneFilter">
-              <option value="">Todas las zonas</option>
-              <option value="Punta Cana">Punta Cana</option>
-              <option value="Bávaro">Bávaro</option>
-              <option value="Friusa">Friusa</option>
-              <option value="Verón">Verón</option>
-              <option value="Macao">Macao</option>
-            </select>
-            <button onclick="performSearch()">Buscar</button>
-          </div>
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- HERO -->
+    <section id="homeSection" class="grid md:grid-cols-2 gap-6 items-center">
+      <div>
+        <h2 class="text-3xl font-extrabold">Encuentra técnicos confiables en <span class="text-sky-600">Punta Cana</span></h2>
+        <p class="mt-3 text-slate-600">Plomeros, electricistas, refrigeración, cerrajeros, herreros, mecánicos y más. Reserva y paga desde la app.</p>
+        <div class="mt-6 flex gap-3">
+          <button id="btnExplore" class="px-4 py-2 bg-sky-600 text-white rounded-md">Explorar técnicos</button>
+          <button id="btnRegisterUser" class="px-4 py-2 border rounded-md">Crear cuenta</button>
         </div>
-        <div class="hero-card">
-          <img alt="servicios" src="assets/img/icons/tools-illustration.svg" onerror="this.style.display='none'"/>
-          <ul class="features">
-            <li>Perfiles verificados</li>
-            <li>Contacto por WhatsApp</li>
-            <li>Servicios por zona</li>
-          </ul>
+      </div>
+      <div class="bg-white card p-6 rounded-lg shadow">
+        <h3 class="font-semibold">Categorías destacadas</h3>
+        <div class="grid grid-cols-3 gap-3 mt-4 text-sm text-slate-700">
+          <div class="p-3 rounded border text-center">Plomería</div>
+          <div class="p-3 rounded border text-center">Electricidad</div>
+          <div class="p-3 rounded border text-center">Refrigeración</div>
+          <div class="p-3 rounded border text-center">A/C</div>
+          <div class="p-3 rounded border text-center">Cerrajería</div>
+          <div class="p-3 rounded border text-center">Herrería</div>
         </div>
       </div>
     </section>
 
-    <section class="categories container">
-      <h2>Categorías destacadas</h2>
-      <div class="cats-grid" id="categoriesGrid"></div>
+    <!-- SERVICES -->
+    <section id="servicesSection" class="hidden mt-8">
+      <h2 class="text-2xl font-bold">Servicios</h2>
+      <p class="text-slate-500 mt-2">Filtra por zona y categoría</p>
+      <div class="mt-4 flex gap-3">
+        <input id="serviceFilter" placeholder="Buscar servicio..." class="p-2 border rounded w-full" />
+        <select id="zoneFilter" class="p-2 border rounded">
+          <option value="">Todas las zonas</option>
+          <option>Punta Cana</option>
+          <option>Bávaro</option>
+          <option>Friusa</option>
+          <option>Verón</option>
+        </select>
+        <button id="btnFilter" class="px-3 py-2 bg-sky-600 text-white rounded">Filtrar</button>
+      </div>
     </section>
 
-    <section class="featured container">
-      <h2>Técnicos destacados</h2>
-      <div id="featuredGrid" class="tech-grid"></div>
-      <p class="muted">Puedes ver todos los técnicos en la página <a href="technicians.html">Técnicos</a>.</p>
+    <!-- TECHNICIANS -->
+    <section id="techSection" class="hidden mt-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">Técnicos disponibles</h2>
+        <div class="text-sm text-slate-500">Zona: <span id="currentZone">Todas</span></div>
+      </div>
+      <div id="techGrid" class="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2"></div>
     </section>
+
+    <!-- ADMIN / MODO TECNICO -->
+    <section id="adminSection" class="hidden mt-8">
+      <h2 class="text-2xl font-bold">Modo Técnico (Crear perfil)</h2>
+      <p class="text-slate-500 mt-1">Regístrate o inicia sesión y crea tu perfil de técnico. Cada técnico debe incluir <strong>2 números de referencia</strong>.</p>
+
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        <!-- Auth / Register -->
+        <div class="bg-white p-4 rounded card">
+          <h3 class="font-semibold">Acceso</h3>
+          <form id="authForm" class="mt-3 space-y-2">
+            <input id="authEmail" placeholder="Email" class="w-full p-2 border rounded" required />
+            <input id="authPassword" type="password" placeholder="Contraseña" class="w-full p-2 border rounded" required />
+            <div class="flex gap-2">
+              <button type="button" id="btnLogin" class="px-3 py-2 bg-green-600 text-white rounded">Ingresar</button>
+              <button type="button" id="btnSignup" class="px-3 py-2 bg-sky-600 text-white rounded">Crear cuenta</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Nota: en esta demo, el "login" se guarda en localStorage. Para producción, conecta Firebase Auth.</p>
+          </form>
+        </div>
+
+        <!-- Create technician -->
+        <div class="bg-white p-4 rounded card" id="techCreateCard">
+          <h3 class="font-semibold">Crear perfil técnico</h3>
+          <form id="createTechForm" class="mt-3 space-y-2">
+            <input id="techName" placeholder="Nombre completo" class="w-full p-2 border rounded" required />
+            <input id="techPhone" placeholder="Teléfono (WhatsApp)" class="w-full p-2 border rounded" required />
+            <input id="techZone" placeholder="Zona (ej. Punta Cana)" class="w-full p-2 border rounded" required />
+            <input id="techServices" placeholder="Servicios (coma separado: Plomería,Electricidad)" class="w-full p-2 border rounded" />
+            <input id="techPhoto" placeholder="URL foto (opcional)" class="w-full p-2 border rounded" />
+            <div class="grid grid-cols-2 gap-2">
+              <input id="techRef1" placeholder="Referencia 1 (nombre-teléfono)" class="p-2 border rounded" required />
+              <input id="techRef2" placeholder="Referencia 2 (nombre-teléfono)" class="p-2 border rounded" required />
+            </div>
+            <div class="flex gap-2 mt-2">
+              <button class="px-3 py-2 bg-sky-600 text-white rounded">Crear técnico</button>
+              <button type="button" id="btnClearTech" class="px-3 py-2 border rounded">Limpiar</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Los técnicos se almacenan localmente. Para producción: Firestore/Backend.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© TechTasks Punta Cana — Hecho para servicios locales • <a href="https://github.com/">Repositorio</a></p>
-    </div>
-  </footer>
+  <!-- Modal: Perfil técnico -->
+  <div id="profileModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-2xl w-full p-6 card">
+      <div class="flex items-start justify-between">
+        <div>
+          <h3 id="profileName" class="text-xl font-bold"></h3>
+          <p id="profileZone" class="text-sm text-slate-500"></p>
+        </div>
+        <button id="closeProfile" class="text-slate-500">Cerrar ✕</button>
+      </div>
+      <div class="mt-4 md:flex gap-6">
+        <img id="profilePhoto" src="" alt="" class="w-36 h-36 rounded object-cover border" />
+        <div>
+          <p id="profileServices" class="text-slate-700"></p>
+          <p class="mt-2"><strong>Teléfono:</strong> <span id="profilePhone"></span></p>
+          <p class="mt-2"><strong>Referencias:</strong></p>
+          <ul class="list-disc ml-5 text-slate-600">
+            <li id="profileRef1"></li>
+            <li id="profileRef2"></li>
+          </ul>
 
+          <div class="mt-4 flex gap-3">
+            <a id="waLink" class="px-3 py-2 border rounded text-sm" target="_blank" rel="noopener">Contactar (WhatsApp)</a>
+            <button id="payBtn" class="px-3 py-2 bg-green-600 text-white rounded text-sm">Pagar y reservar</button>
+          </div>
+
+          <p id="payNote" class="text-xs text-slate-500 mt-3">El botón de pago intenta llamar a <code>/create-checkout</code> (server-side). Reemplaza por tu función Stripe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
   <script>
-    // small inline helpers for WhatsApp CTA
-    function openWhatsApp(){
-      const phone = "+18091234567"; // TODO: reemplazar por número real
-      const text = encodeURIComponent("Hola, necesito un servicio técnico en Punta Cana. ¿Me ayudan?");
-      window.open("https://wa.me/"+phone.replace(/\D/g,'')+"?text="+text,"_blank");
+    /*******************************
+     Demo JS: almacenamiento local
+     Reemplazar con Firebase + Stripe para producción
+    *******************************/
+
+    // UI selectors
+    const homeSection = document.getElementById('homeSection');
+    const servicesSection = document.getElementById('servicesSection');
+    const techSection = document.getElementById('techSection');
+    const adminSection = document.getElementById('adminSection');
+    const authArea = document.getElementById('authArea');
+
+    // Profile modal
+    const profileModal = document.getElementById('profileModal');
+    const profileName = document.getElementById('profileName');
+    const profileZone = document.getElementById('profileZone');
+    const profilePhoto = document.getElementById('profilePhoto');
+    const profileServices = document.getElementById('profileServices');
+    const profilePhone = document.getElementById('profilePhone');
+    const profileRef1 = document.getElementById('profileRef1');
+    const profileRef2 = document.getElementById('profileRef2');
+    const waLink = document.getElementById('waLink');
+    const payBtn = document.getElementById('payBtn');
+
+    // initial data (sample)
+    const SAMPLE_TECHS = [
+      { id: 't001', name: 'Juan Reyes', phone: '+1 809-555-0101', zone: 'Punta Cana', services: ['Plomería','Mantenimiento A/C'], photo: '', ref1: 'Ana (809-111-2222)', ref2: 'Luis (809-333-4444)', rating: 4.8 },
+      { id: 't002', name: 'María López', phone: '+1 809-555-0202', zone: 'Bávaro', services: ['Electricidad'], photo: '', ref1: 'Carlos (809-555-5555)', ref2: 'Pedro (809-666-7777)', rating: 4.7 }
+    ];
+
+    // storage helpers
+    function loadTechs(){
+      const raw = localStorage.getItem('techs');
+      if(!raw){
+        localStorage.setItem('techs', JSON.stringify(SAMPLE_TECHS));
+        return SAMPLE_TECHS;
+      }
+      try { return JSON.parse(raw); } catch(e){ return SAMPLE_TECHS; }
     }
+    function saveTechs(list){ localStorage.setItem('techs', JSON.stringify(list)); }
+
+    // auth (simple local)
+    function currentUser(){
+      return JSON.parse(localStorage.getItem('user') || 'null');
+    }
+    function setUser(u){ localStorage.setItem('user', JSON.stringify(u)); updateAuthUI(); }
+
+    function updateAuthUI(){
+      const u = currentUser();
+      if(u){
+        authArea.innerHTML = `
+          <div class="flex items-center gap-2">
+            <div class="text-sm text-slate-700">Hola, <strong>${u.email}</strong></div>
+            <button id="btnLogout" class="px-2 py-1 border rounded text-sm">Salir</button>
+          </div>`;
+        document.getElementById('btnLogout').onclick = ()=>{ localStorage.removeItem('user'); updateAuthUI(); }
+      } else {
+        authArea.innerHTML = `<button id="btnOpenAuth" class="px-2 py-1 border rounded text-sm">Acceder</button>`;
+        document.getElementById('btnOpenAuth').onclick = ()=> { showSection('admin'); window.scrollTo(0,0); }
+      }
+    }
+
+    // render technicians
+    function renderTechGrid(filterService='', zone=''){
+      const grid = document.getElementById('techGrid');
+      const list = loadTechs();
+      let filtered = list;
+      if(filterService) filtered = filtered.filter(t => t.services.join(' ').toLowerCase().includes(filterService.toLowerCase()));
+      if(zone) filtered = filtered.filter(t => t.zone === zone);
+      grid.innerHTML = '';
+      if(filtered.length===0) grid.innerHTML = '<div class="text-slate-500">No hay técnicos.</div>';
+      filtered.forEach(t=>{
+        const div = document.createElement('div');
+        div.className = 'bg-white p-4 rounded card flex gap-4 items-center';
+        div.innerHTML = `
+          <div class="w-20 h-20 bg-slate-100 rounded overflow-hidden flex items-center justify-center">
+            <img src="${t.photo || 'https://via.placeholder.com/120x120?text=User'}" alt="" class="object-cover w-full h-full"/>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold">${t.name}</h4>
+                <div class="text-sm text-slate-500">${t.zone} • ${t.rating || '—'} ⭐</div>
+              </div>
+              <div class="text-sm">
+                <button data-id="${t.id}" class="openProfile px-3 py-1 bg-sky-600 text-white rounded text-xs">Ver</button>
+              </div>
+            </div>
+            <p class="text-sm mt-2 text-slate-700">${t.services.join(', ')}</p>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+
+      // attach profile buttons
+      document.querySelectorAll('.openProfile').forEach(btn=>{
+        btn.onclick = (e)=>{
+          const id = e.currentTarget.dataset.id;
+          openProfile(id);
+        }
+      });
+    }
+
+    // show profile modal
+    function openProfile(id){
+      const list = loadTechs();
+      const t = list.find(x=>x.id===id);
+      if(!t) return alert('Técnico no encontrado');
+      profileName.textContent = t.name;
+      profileZone.textContent = t.zone;
+      profilePhoto.src = t.photo || 'https://via.placeholder.com/320x320?text=User';
+      profileServices.textContent = 'Servicios: ' + (t.services?.join(', ') || '—');
+      profilePhone.textContent = t.phone;
+      profileRef1.textContent = t.ref1 || '—';
+      profileRef2.textContent = t.ref2 || '—';
+      waLink.href = `https://wa.me/${(t.phone||'').replace(/\\D/g,'')}?text=${encodeURIComponent('Hola '+t.name+' - necesito tu servicio')}`;
+      // payment button (calls server endpoint /create-checkout - replace with your server)
+      payBtn.onclick = async ()=>{
+        // Example: you should POST technician id and amount to your server function that returns stripe checkout url
+        const amount = prompt('Ingrese monto a pagar (en USD) — ejemplo: 25.00', '25.00');
+        if(!amount) return;
+        try {
+          // Replace '/create-checkout' with your actual serverless endpoint (Netlify / Vercel / Firebase)
+          const resp = await fetch('/create-checkout', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ technicianId: t.id, amount: Math.round(parseFloat(amount) * 100) })
+          });
+          if(resp.ok){
+            const data = await resp.json();
+            // expected: { url: 'https://checkout.stripe.com/...' }
+            if(data.url) window.location = data.url;
+            else alert('Respuesta inválida del servidor. Revisa tu función create-checkout.');
+          } else {
+            const txt = await resp.text();
+            alert('Error en servidor: ' + txt);
+          }
+        } catch(err){
+          alert('No se pudo conectar al servidor de pagos. En local demo no existe endpoint. Implementa server-side.');
+          console.error(err);
+        }
+      };
+
+      profileModal.classList.remove('hidden');
+      profileModal.classList.add('flex');
+    }
+
+    document.getElementById('closeProfile').onclick = ()=> {
+      profileModal.classList.add('hidden');
+      profileModal.classList.remove('flex');
+    };
+
+    // UI navigation
+    function showSection(name){
+      homeSection.classList.toggle('hidden', name!=='home');
+      servicesSection.classList.toggle('hidden', name!=='services');
+      techSection.classList.toggle('hidden', name!=='tech');
+      adminSection.classList.toggle('hidden', name!=='admin');
+      if(name==='tech'){ renderTechGrid(); }
+    }
+
+    // button bindings
+    document.getElementById('btnShowTech').onclick = ()=> { showSection('tech'); window.scrollTo(0,0); }
+    document.getElementById('btnShowServices').onclick = ()=> { showSection('services'); window.scrollTo(0,0); }
+    document.getElementById('btnShowAdmin').onclick = ()=> { showSection('admin'); window.scrollTo(0,0); }
+    document.getElementById('btnExplore').onclick = ()=> { showSection('tech'); window.scrollTo(0,0); }
+    document.getElementById('btnRegisterUser').onclick = ()=> { showAuthModal(); showSection('admin'); window.scrollTo(0,0); }
+
+    // Filter services
+    document.getElementById('btnFilter').onclick = ()=> {
+      const f = document.getElementById('serviceFilter').value.trim();
+      const z = document.getElementById('zoneFilter').value;
+      document.getElementById('currentZone').textContent = z||'Todas';
+      renderTechGrid(f,z);
+      showSection('tech');
+    };
+
+    // Auth actions (local demo)
+    document.getElementById('btnLogin').onclick = ()=> {
+      const email = document.getElementById('authEmail').value.trim();
+      const pwd = document.getElementById('authPassword').value.trim();
+      if(!email || !pwd) return alert('Completa email y contraseña');
+      // simple demo: store user
+      setUser({ email });
+      alert('Ingresado como: ' + email);
+    };
+    document.getElementById('btnSignup').onclick = ()=> {
+      const email = document.getElementById('authEmail').value.trim();
+      const pwd = document.getElementById('authPassword').value.trim();
+      if(!email || !pwd) return alert('Completa email y contraseña');
+      // in demo: just register and log in
+      setUser({ email });
+      alert('Cuenta creada e ingresada: ' + email);
+    };
+
+    // Create technician
+    document.getElementById('createTechForm').onsubmit = (e)=> {
+      e.preventDefault();
+      const user = currentUser();
+      if(!user) return alert('Debes ingresar/crear una cuenta antes de crear un técnico.');
+      const name = document.getElementById('techName').value.trim();
+      const phone = document.getElementById('techPhone').value.trim();
+      const zone = document.getElementById('techZone').value.trim();
+      const services = (document.getElementById('techServices').value || '').split(',').map(s=>s.trim()).filter(Boolean);
+      const photo = document.getElementById('techPhoto').value.trim();
+      const ref1 = document.getElementById('techRef1').value.trim();
+      const ref2 = document.getElementById('techRef2').value.trim();
+      if(!name || !phone || !zone || !ref1 || !ref2) return alert('Completa los campos obligatorios y las 2 referencias.');
+      const list = loadTechs();
+      const newTech = {
+        id: 't' + Date.now(),
+        name, phone, zone, services, photo, ref1, ref2, rating: 5
+      };
+      list.unshift(newTech);
+      saveTechs(list);
+      renderTechGrid();
+      alert('Técnico creado correctamente.');
+      document.getElementById('createTechForm').reset();
+      showSection('tech');
+    };
+
+    document.getElementById('btnClearTech').onclick = ()=> document.getElementById('createTechForm').reset();
+
+    // quick auth modal (scroll to admin)
+    function showAuthModal(){ showSection('admin'); window.scrollTo({top:0, behavior:'smooth'}); }
+
+    // initial render
+    updateAuthUI();
+    renderTechGrid();
+
+    // Helpful note: To make this production-ready:
+    // 1) Reemplaza el auth local por Firebase Auth (email/password o Google).
+    // 2) Guarda técnicos en Firestore (collection 'technicians').
+    // 3) Implementa endpoint server-side /create-checkout que cree sesión Stripe Checkout o usa Stripe Connect para comisiones.
+    // 4) Ajusta moneda a DOP y cumple KYC si procesas pagos y transfieres a técnicos.
   </script>
 </body>
 </html>
