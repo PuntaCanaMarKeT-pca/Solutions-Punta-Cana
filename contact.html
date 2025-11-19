@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contacto - TechTasks Punta Cana</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/main.js"></script>
+</head>
+<body>
+  <header class="site-header small">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">TechTasks Punta Cana</a>
+      <nav class="nav">
+        <a href="index.html">Inicio</a>
+        <a href="services.html">Servicios</a>
+        <a href="technicians.html">Técnicos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Contacto</h1>
+    <p>¿Tienes dudas o quieres que incluyamos tu servicio? Escríbenos.</p>
+
+    <form id="contactForm" onsubmit="submitContact(event)" class="contact-form">
+      <label>Nombre<input name="name" required></label>
+      <label>Teléfono<input name="phone" required></label>
+      <label>Mensaje<textarea name="message" rows="4" required></textarea></label>
+      <button type="submit">Enviar por WhatsApp</button>
+    </form>
+
+    <section class="info-cards">
+      <div class="card">
+        <h3>Teléfono</h3>
+        <p>+1 809-123-4567</p>
+      </div>
+      <div class="card">
+        <h3>Zona</h3>
+        <p>Punta Cana • Bávaro • Friusa</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© TechTasks Punta Cana</p>
+    </div>
+  </footer>
+</body>
+</html>

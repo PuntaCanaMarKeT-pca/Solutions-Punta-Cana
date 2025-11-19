@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TechTasks Punta Cana</title>
+  <meta name="description" content="Plataforma de servicios técnicos on-demand en Punta Cana, Bávaro y zonas aledañas.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/main.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">TechTasks Punta Cana</a>
+      <nav class="nav">
+        <a href="services.html">Servicios</a>
+        <a href="technicians.html">Técnicos</a>
+        <a href="contact.html">Contacto</a>
+      </nav>
+      <button class="btn-cta" onclick="openWhatsApp()"><span>Pedidos</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <h1>Servicios técnicos rápidos y confiables en <strong>Punta Cana</strong></h1>
+          <p>Plomeros, electricistas, mecánicos, refrigeración, cerrajeros y más. Filtra por zona y contacta al técnico directamente por WhatsApp.</p>
+          <div class="search-row">
+            <input id="searchInput" placeholder="Buscar servicio o técnico (ej. plomero, aire acondicionado)"/>
+            <select id="zoneFilter">
+              <option value="">Todas las zonas</option>
+              <option value="Punta Cana">Punta Cana</option>
+              <option value="Bávaro">Bávaro</option>
+              <option value="Friusa">Friusa</option>
+              <option value="Verón">Verón</option>
+              <option value="Macao">Macao</option>
+            </select>
+            <button onclick="performSearch()">Buscar</button>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img alt="servicios" src="assets/img/icons/tools-illustration.svg" onerror="this.style.display='none'"/>
+          <ul class="features">
+            <li>Perfiles verificados</li>
+            <li>Contacto por WhatsApp</li>
+            <li>Servicios por zona</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="categories container">
+      <h2>Categorías destacadas</h2>
+      <div class="cats-grid" id="categoriesGrid"></div>
+    </section>
+
+    <section class="featured container">
+      <h2>Técnicos destacados</h2>
+      <div id="featuredGrid" class="tech-grid"></div>
+      <p class="muted">Puedes ver todos los técnicos en la página <a href="technicians.html">Técnicos</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© TechTasks Punta Cana — Hecho para servicios locales • <a href="https://github.com/">Repositorio</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // small inline helpers for WhatsApp CTA
+    function openWhatsApp(){
+      const phone = "+18091234567"; // TODO: reemplazar por número real
+      const text = encodeURIComponent("Hola, necesito un servicio técnico en Punta Cana. ¿Me ayudan?");
+      window.open("https://wa.me/"+phone.replace(/\D/g,'')+"?text="+text,"_blank");
+    }
+  </script>
+</body>
+</html>

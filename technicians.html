@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Técnicos - TechTasks Punta Cana</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/main.js"></script>
+</head>
+<body>
+  <header class="site-header small">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">TechTasks Punta Cana</a>
+      <nav class="nav">
+        <a href="index.html">Inicio</a>
+        <a href="services.html">Servicios</a>
+        <a href="contact.html">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Técnicos disponibles</h1>
+    <div class="search-row">
+      <input id="techSearch" placeholder="Buscar técnico por nombre o servicio" />
+      <select id="techZoneFilter">
+        <option value="">Todas las zonas</option>
+        <option value="Punta Cana">Punta Cana</option>
+        <option value="Bávaro">Bávaro</option>
+        <option value="Friusa">Friusa</option>
+      </select>
+      <button onclick="renderTechnicians()">Buscar</button>
+    </div>
+
+    <div id="techList" class="tech-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© TechTasks Punta Cana</p>
+    </div>
+  </footer>
+</body>
+</html>
